@@ -36,7 +36,7 @@ function App() {
     const updatedEmployees = [...employees];
     updatedEmployees[employeeIndex] = {
       ...selectedEmployee,
-      coffeeCount: selectedEmployee.coffeeCount + 1,
+      coffeeCount: selectedEmployee.coffeeCount + 20,
       lastCoffeeDate: today,
     };
 
@@ -49,7 +49,7 @@ function App() {
       <h1>Daily Coffee</h1>
       <div className="employee-list">
         {employees.map((employee) => (
-          <div key={employee.id} className={`employee-card ${employee.coffeeCount === 1 ? 'one-coffee' : ''}`}
+          <div key={employee.id} className={`employee-card ${employee.coffeeCount !== 0 ? 'one-coffee' : ''}`}
           >
             <h2>{employee.name}</h2>
             <button onClick={() => handleCoffeeClick(employee.id)}>
@@ -59,7 +59,7 @@ function App() {
                 width="50"
               />
             </button>
-            <p>{employee.coffeeCount} Kahve</p>
+             {employee.coffeeCount > 0 && <p>{employee.coffeeCount} TL</p>}
           </div>
         ))}
       </div>
