@@ -46,7 +46,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Kahve Takip Sistemi</h1>
+      <h1>Daily Coffee</h1>
       <div className="employee-list">
         {employees.map((employee) => (
           <div key={employee.id} className={`employee-card ${employee.coffeeCount === 1 ? 'one-coffee' : ''}`}
