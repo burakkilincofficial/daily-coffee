@@ -4,19 +4,19 @@ import "./App.css";
 
 function App() {
   const initialEmployees = JSON.parse(localStorage.getItem("employees")) || [
-    { id: 1, name: "Atakan", coffeeCount: 0, canTakeCoffee: true },
-    { id: 2, name: "Emrah", coffeeCount: 0, canTakeCoffee: true },
-    { id: 3, name: "Burak K.", coffeeCount: 0, canTakeCoffee: true },
-    { id: 4, name: "Irem", coffeeCount: 0, canTakeCoffee: true },
-    { id: 5, name: "Akin", coffeeCount: 0, canTakeCoffee: true },
-    { id: 6, name: "Nilgun", coffeeCount: 0, canTakeCoffee: true },
-    { id: 7, name: "Nazli", coffeeCount: 0, canTakeCoffee: true },
-    { id: 8, name: "Ebubekir", coffeeCount: 0, canTakeCoffee: true },
-    { id: 9, name: "Batikan", coffeeCount: 0, canTakeCoffee: true },
-    { id: 10, name: "Hayat", coffeeCount: 0, canTakeCoffee: true },
-    { id: 11, name: "Omer", coffeeCount: 0, canTakeCoffee: true },
-    { id: 12, name: "Egehan", coffeeCount: 0, canTakeCoffee: true },
-    { id: 13, name: "Burak A.", coffeeCount: 0, canTakeCoffee: true },
+    { id: 1, name: "Atakan", totalCoffeMoney: 0, canTakeCoffee: true },
+    { id: 2, name: "Emrah", totalCoffeMoney: 0, canTakeCoffee: true },
+    { id: 3, name: "Burak K.", totalCoffeMoney: 0, canTakeCoffee: true },
+    { id: 4, name: "Irem", totalCoffeMoney: 0, canTakeCoffee: true },
+    { id: 5, name: "Akin", totalCoffeMoney: 0, canTakeCoffee: true },
+    { id: 6, name: "Nilgun", totalCoffeMoney: 0, canTakeCoffee: true },
+    { id: 7, name: "Nazli", totalCoffeMoney: 0, canTakeCoffee: true },
+    { id: 8, name: "Ebubekir", totalCoffeMoney: 0, canTakeCoffee: true },
+    { id: 9, name: "Batikan", totalCoffeMoney: 0, canTakeCoffee: true },
+    { id: 10, name: "Hayat", totalCoffeMoney: 0, canTakeCoffee: true },
+    { id: 11, name: "Omer", totalCoffeMoney: 0, canTakeCoffee: true },
+    { id: 12, name: "Egehan", totalCoffeMoney: 0, canTakeCoffee: true },
+    { id: 13, name: "Burak A.", totalCoffeMoney: 0, canTakeCoffee: true },
   ];
 
   initialEmployees.sort((a, b) => a.name.localeCompare(b.name));
@@ -29,14 +29,14 @@ function App() {
     const selectedEmployee = employees[employeeIndex];
 
     if (selectedEmployee.lastCoffeeDate === today) {
-      alert(`${selectedEmployee.name}, bugün zaten kahve cezanı aldın! ☕`);
+      alert(`${selectedEmployee.name}, bugün zaten kahve cezani aldin! ☕`);
       return;
     }
 
     const updatedEmployees = [...employees];
     updatedEmployees[employeeIndex] = {
       ...selectedEmployee,
-      coffeeCount: selectedEmployee.coffeeCount + 20,
+      totalCoffeMoney: selectedEmployee.totalCoffeMoney + 20,
       lastCoffeeDate: today,
     };
 
@@ -49,7 +49,7 @@ function App() {
       <h1>Daily Coffee</h1>
       <div className="employee-list">
         {employees.map((employee) => (
-          <div key={employee.id} className={`employee-card ${employee.coffeeCount !== 0 ? 'one-coffee' : ''}`}
+          <div key={employee.id} className={`employee-card ${employee.totalCoffeMoney !== 0 ? 'one-coffee' : ''}`}
           >
             <h2>{employee.name}</h2>
             <button onClick={() => handleCoffeeClick(employee.id)}>
@@ -59,7 +59,7 @@ function App() {
                 width="50"
               />
             </button>
-             {employee.coffeeCount > 0 && <p>{employee.coffeeCount} TL</p>}
+             {employee.totalCoffeMoney > 0 && <p>{employee.totalCoffeMoney} TL</p>}
           </div>
         ))}
       </div>
