@@ -1,5 +1,5 @@
 import "./styles.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
@@ -22,6 +22,13 @@ function App() {
   initialEmployees.sort((a, b) => a.name.localeCompare(b.name));
 
   const [employees, setEmployees] = useState(initialEmployees);
+  const [totalMoney, setTotalMoney] = useState(0);
+
+  useEffect(() => {
+    // Toplam kahve parasını hesapla
+    const total = employees.reduce((acc, employee) => acc + employee.totalCoffeMoney, 0);
+    setTotalMoney(total);
+  }, [employees]);
 
   const handleCoffeeClick = (id) => {
     const today = new Date().toDateString();
@@ -29,7 +36,7 @@ function App() {
     const selectedEmployee = employees[employeeIndex];
 
     if (selectedEmployee.lastCoffeeDate === today) {
-      alert(`${selectedEmployee.name}, bugün zaten kahve cezani aldin! ☕`);
+      alert(`${selectedEmployee.name}, bugün zaten kahve cezani aldın! ☕`);
       return;
     }
 
@@ -46,12 +53,16 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Daily Coffee</h1>
+      <h1>Daily Coffee Cash</h1>
+      <h4>total coffee cash: {totalMoney} TL</h4>
       <div className="employee-list">
         {employees.map((employee) => (
-          <div key={employee.id} className={`employee-card ${employee.totalCoffeMoney !== 0 ? 'one-coffee' : ''}`}
+          <div
+            key={employee.id}
+            className={`employee-card ${employee.totalCoffeMoney !== 0 ? 'one-coffee' : ''}`}
           >
-            <h2>{employee.name}</h2>
+            <h3>{employee.name}</h3>
+            <p>{employee.totalCoffeMoney} TL</p>
             <button onClick={() => handleCoffeeClick(employee.id)}>
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Coffee_cup_icon.svg/2137px-Coffee_cup_icon.svg.png"
@@ -59,7 +70,6 @@ function App() {
                 width="50"
               />
             </button>
-             {employee.totalCoffeMoney > 0 && <p>{employee.totalCoffeMoney} TL</p>}
           </div>
         ))}
       </div>

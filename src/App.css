@@ -5,41 +5,49 @@
 
 .employee-list {
   display: grid;
-  grid-template-columns: repeat(7, 1fr); /* 4 sütunlu bir grid */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive sütun genişliği */
   gap: 20px;
-  justify-content: center; /* İçerikleri merkezde tut */
+  justify-content: center;
 }
 
 .employee-card {
-  border: 1px solid #ccc;
-  padding: 20px;
-  width: 150px;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* İçerikleri merkezde tut */
-}
-
-button {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  margin-top: 20px; /* Düğmeyi yukarı it */
-}
-
-button:hover img {
-  transform: scale(1.1);
-}
-
-.employee-card {
-  border: 1px solid #ccc;
-  padding: 20px;
+  padding: 40px;
   width: 150px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+button:hover img {
+  transform: scale(1.1);
+}
+
 .employee-card.one-coffee {
-  font-weight: bold;  /* Kalın font */
-  color: green;       /* Yeşil renk */
+  font-weight: bold;
+  color: green;
+}
+
+/* Ekstra küçük ekranlar için stil */
+@media (max-width: 768px) {
+  .employee-list {
+    grid-template-columns: repeat(2, 1fr); /* 2 sütunlu bir grid */
+  }
+
+  .employee-card {
+    width: 100%; /* Kartları tam genişlikte göster */
+  }
+}
+
+/* Daha da küçük ekranlar için stil */
+@media (max-width: 480px) {
+  .employee-list {
+    grid-template-columns: 1fr; /* Tek sütunlu bir grid */
+  }
 }
