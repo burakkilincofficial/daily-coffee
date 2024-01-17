@@ -3,21 +3,20 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
-  const initialEmployees = JSON.parse(localStorage.getItem("employees")) || [
-    { id: 1, name: "Atakan", totalCoffeMoney: 0, canTakeCoffee: true },
-    { id: 2, name: "Emrah", totalCoffeMoney: 0, canTakeCoffee: true },
-    { id: 3, name: "Burak K.", totalCoffeMoney: 0, canTakeCoffee: true },
-    { id: 4, name: "Irem", totalCoffeMoney: 0, canTakeCoffee: true },
-    { id: 5, name: "Akin", totalCoffeMoney: 0, canTakeCoffee: true },
-    { id: 6, name: "Nilgun", totalCoffeMoney: 0, canTakeCoffee: true },
-    { id: 7, name: "Nazli", totalCoffeMoney: 0, canTakeCoffee: true },
-    { id: 8, name: "Ebubekir", totalCoffeMoney: 0, canTakeCoffee: true },
-    { id: 9, name: "Batikan", totalCoffeMoney: 0, canTakeCoffee: true },
-    { id: 10, name: "Hayat", totalCoffeMoney: 0, canTakeCoffee: true },
-    { id: 11, name: "Omer", totalCoffeMoney: 0, canTakeCoffee: true },
-    { id: 12, name: "Egehan", totalCoffeMoney: 0, canTakeCoffee: true },
-    { id: 13, name: "Burak A.", totalCoffeMoney: 0, canTakeCoffee: true },
-  ];
+  const initialEmployees = JSON.parse(localStorage.getItem("employees")) || 
+  [{ "id": 5, "name": "Akin", "totalCoffeMoney": 0, "canTakeCoffee": true }, 
+  { "id": 1, "name": "Atakan", "totalCoffeMoney": 20, "canTakeCoffee": true, "lastCoffeeDate": "Tue Jan 16 2024" }, 
+  { "id": 9, "name": "Batikan", "totalCoffeMoney": 80, "canTakeCoffee": true, "lastCoffeeDate": "Tue Jan 16 2024" }, 
+  { "id": 13, "name": "Burak A.", "totalCoffeMoney": 40, "canTakeCoffee": true, "lastCoffeeDate": "Wed Jan 17 2024" }, 
+  { "id": 3, "name": "Burak K.", "totalCoffeMoney": 0, "canTakeCoffee": true }, 
+  { "id": 8, "name": "Ebubekir", "totalCoffeMoney": 20, "canTakeCoffee": true, "lastCoffeeDate": "Wed Jan 17 2024" }, 
+  { "id": 12, "name": "Egehan", "totalCoffeMoney": 60, "canTakeCoffee": true }, 
+  { "id": 2, "name": "Emrah", "totalCoffeMoney": 120, "canTakeCoffee": true }, 
+  { "id": 10, "name": "Hayat", "totalCoffeMoney": 40, "canTakeCoffee": true, "lastCoffeeDate": "Wed Jan 17 2024" }, 
+  { "id": 4, "name": "Irem", "totalCoffeMoney": 60, "canTakeCoffee": true }, 
+  { "id": 7, "name": "Nazli", "totalCoffeMoney": 40, "canTakeCoffee": true, "lastCoffeeDate": "Wed Jan 17 2024" }, 
+  { "id": 6, "name": "Nilgun", "totalCoffeMoney": 0, "canTakeCoffee": true }, 
+  { "id": 11, "name": "Omer", "totalCoffeMoney": 0, "canTakeCoffee": true }];
 
   initialEmployees.sort((a, b) => a.name.localeCompare(b.name));
 
