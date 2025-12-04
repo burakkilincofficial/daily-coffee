@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("POSTGRES_URL")
+}
+
+model Group {
+  id          String   @id @default(cuid())
+  name        String   @default("Daily Coffee Grubu")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members     Member[]
+  debts       Debt[]
+
+  @@map("groups")
+}
+
+model Member {
+  id          String   @id @default(cuid())
+  name        String
+  groupId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  group       Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  debts       Debt[]
+
+  @@unique([groupId, name])
+  @@map("members")
+}
+
+model Debt {
+  id          String   @id @default(cuid())
+  memberId    String
+  groupId     String
+  type        String   @default("coffee")
+  amount      Int      @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  member      Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  group       Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@map("debts")
+}
+
