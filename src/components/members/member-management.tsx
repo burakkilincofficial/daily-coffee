@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { z } from "zod";
 import { useCoffeeStore } from "@/store/coffee-store";
-import { addMemberAction, removeMemberAction, updateMemberAction, getMembersAction } from "@/app/actions/members";
+import { addMemberAction, updateMemberAction, getMembersAction } from "@/app/actions/members";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trash2, Plus, Pencil } from "lucide-react";
+import { Plus, Pencil } from "lucide-react";
 import type { MemberWithDebts } from "@/types/coffee";
 
 const memberSchema = z.object({
@@ -27,11 +27,10 @@ const memberSchema = z.object({
 });
 
 export function MemberManagement() {
-  const { members, addMember, removeMember, updateMember, setMembers } = useCoffeeStore();
+  const { members, addMember, updateMember, setMembers } = useCoffeeStore();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newMemberName, setNewMemberName] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [editingMember, setEditingMember] = useState<MemberWithDebts | null>(null);
   const [editMemberName, setEditMemberName] = useState("");
 
@@ -63,22 +62,6 @@ export function MemberManagement() {
     }
   };
 
-  const handleDeleteMember = async (memberId: string) => {
-    const result = await removeMemberAction(memberId);
-
-    if (!result.success) {
-      setError(result.error || "Üye silinirken bir hata oluştu");
-      return;
-    }
-
-    const membersResult = await getMembersAction();
-    if (membersResult.success) {
-      setMembers(membersResult.members);
-    } else {
-      removeMember(memberId);
-    }
-    setDeleteConfirm(null);
-  };
 
   const handleEditMember = async () => {
     if (!editingMember) return;
@@ -159,13 +142,6 @@ export function MemberManagement() {
                     title="Üyeyi düzenle"
                   >
                     <Pencil className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={() => setDeleteConfirm(member.id)}
-                    className="rounded-sm p-1 text-muted-foreground hover:text-destructive transition-colors"
-                    title="Üyeyi sil"
-                  >
-                    <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
               </div>
@@ -272,30 +248,6 @@ export function MemberManagement() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={!!deleteConfirm} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Üyeyi Sil</DialogTitle>
-            <DialogDescription>
-              Bu üyeyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz ve üyenin tüm borç kayıtları silinecektir.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setDeleteConfirm(null)}
-            >
-              İptal
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => deleteConfirm && handleDeleteMember(deleteConfirm)}
-            >
-              Sil
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }

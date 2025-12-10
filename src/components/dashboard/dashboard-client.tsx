@@ -6,7 +6,15 @@ import { MemberManagement } from "@/components/members/member-management";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/tooltip";
-import { Coffee, UtensilsCrossed } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
+import { Coffee, UtensilsCrossed, AlertCircle } from "lucide-react";
 import { addDebtAction } from "@/app/actions/debts";
 import { getMembersAction } from "@/app/actions/members";
 import type { MemberWithDebts } from "@/types/coffee";
@@ -33,6 +41,10 @@ export function DashboardClient({
 
   const currentMembers = members;
   const [addingDebt, setAddingDebt] = useState<string | null>(null);
+  const [errorDialog, setErrorDialog] = useState<{ open: boolean; message: string }>({
+    open: false,
+    message: ""
+  });
 
   const totalDebt = currentMembers.reduce((sum, member) => sum + member.totalDebt, 0);
 
@@ -51,7 +63,10 @@ export function DashboardClient({
           setMembers(membersResult.members);
         }
       } else if (result.error) {
-        alert(result.error);
+        setErrorDialog({
+          open: true,
+          message: result.error
+        });
       }
     } catch (error) {
       console.error("Borç ekleme hatası:", error);
@@ -151,6 +166,37 @@ export function DashboardClient({
           </CardContent>
         </Card>
       </section>
+
+      <Dialog open={errorDialog.open} onOpenChange={(open) => setErrorDialog({ open, message: "" })}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+                <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+              </div>
+              <div>
+                <DialogTitle>Uyarı</DialogTitle>
+                <DialogDescription className="mt-1">
+                  Kahve cezası eklenemedi
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-sm text-foreground">
+              {errorDialog.message}
+            </p>
+          </div>
+          <DialogFooter>
+            <Button
+              onClick={() => setErrorDialog({ open: false, message: "" })}
+              className="w-full sm:w-auto"
+            >
+              Tamam
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
