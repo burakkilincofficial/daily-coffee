@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useCoffeeStore } from "@/store/coffee-store";
 import { MemberManagement } from "@/components/members/member-management";
+import { WheelOfFortune } from "@/components/wheel/wheel-of-fortune";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -165,6 +166,10 @@ export function DashboardClient({
             )}
           </CardContent>
         </Card>
+      </section>
+
+      <section>
+        <WheelOfFortune members={currentMembers} />
       </section>
 
       <Dialog open={errorDialog.open} onOpenChange={(open) => setErrorDialog({ open, message: "" })}>
