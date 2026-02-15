@@ -1,18 +1,56 @@
 import { create } from "zustand";
-import type { MemberWithDebts } from "@/types/coffee";
+import type { MemberWithDebts, CoffeeSettings } from "@/types/coffee";
 
 interface CoffeeState {
   members: MemberWithDebts[];
+  settings: CoffeeSettings | null;
   setMembers: (members: MemberWithDebts[]) => void;
+  setSettings: (settings: CoffeeSettings) => void;
   addMember: (member: MemberWithDebts) => void;
   removeMember: (memberId: string) => void;
   updateMember: (memberId: string, newName: string) => void;
   addDebt: (memberId: string, type: "coffee" | "tea" | "meal", amount: number) => void;
 }
 
+/**
+ * Round-robin yeniden hesaplama yardımcısı.
+ * Members dizisi değiştiğinde canDrinkCoffee değerlerini günceller.
+ */
+function recalculateRoundRobin(members: MemberWithDebts[]): MemberWithDebts[] {
+  if (members.length === 0) return members;
+
+  const minDrinks = Math.min(...members.map((m) => m.coffeesDrunk));
+  const currentRound = minDrinks + 1;
+
+  const membersWhoCanDrink = members.filter(
+    (m) => m.coffeesDrunk < currentRound
+  );
+  const zeroDebtWaiting = membersWhoCanDrink.filter(
+    (m) => m.coffeeDebt === 0
+  );
+  const hasZeroDebtWaiting = zeroDebtWaiting.length > 0;
+
+  return members.map((m) => {
+    const hasNotDrunkThisRound = m.coffeesDrunk < currentRound;
+
+    let canDrinkCoffee: boolean;
+    if (!hasNotDrunkThisRound) {
+      canDrinkCoffee = false;
+    } else if (hasZeroDebtWaiting) {
+      canDrinkCoffee = m.coffeeDebt === 0;
+    } else {
+      canDrinkCoffee = true;
+    }
+
+    return { ...m, canDrinkCoffee };
+  });
+}
+
 export const useCoffeeStore = create<CoffeeState>((set) => ({
   members: [],
+  settings: null,
   setMembers: (members) => set({ members }),
+  setSettings: (settings) => set({ settings }),
   addMember: (member) =>
     set((state) => ({
       members: [...state.members, member],
@@ -28,8 +66,8 @@ export const useCoffeeStore = create<CoffeeState>((set) => ({
       ),
     })),
   addDebt: (memberId, type, amount) =>
-    set((state) => ({
-      members: state.members.map((member) => {
+    set((state) => {
+      const updatedMembers = state.members.map((member) => {
         if (member.id !== memberId) return member;
 
         const newDebt = {
@@ -62,7 +100,9 @@ export const useCoffeeStore = create<CoffeeState>((set) => ({
           teaDebt,
           mealDebt,
         };
-      }),
-    })),
+      });
+
+      return { members: recalculateRoundRobin(updatedMembers) };
+    }),
 }));
 

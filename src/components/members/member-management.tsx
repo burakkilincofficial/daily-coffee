@@ -97,36 +97,37 @@ export function MemberManagement() {
 
   return (
     <>
-      <Card>
+      <Card className="shadow-sm border-border/60">
         <CardHeader className="flex flex-row items-center justify-between gap-4">
           <div>
-            <CardTitle>Takım Üyeleri</CardTitle>
-            <CardDescription>Kahve borcu takip edilecek kişiler</CardDescription>
+            <CardTitle className="text-base font-semibold">Takım Üyeleri</CardTitle>
+            <CardDescription className="text-xs">Kahve borcu takip edilecek kişiler</CardDescription>
           </div>
           <Button
-            variant="default"
+            variant="outline"
             size="sm"
             onClick={() => setIsAddDialogOpen(true)}
+            className="text-xs h-8 border-border/60 hover:bg-accent/60"
           >
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="mr-1.5 h-3.5 w-3.5" />
             Üye Ekle
           </Button>
         </CardHeader>
-        <CardContent className="space-y-2 text-sm">
+        <CardContent className="space-y-1.5 text-sm">
           {members.length === 0 ? (
-            <p className="text-center text-xs text-muted-foreground py-4">
+            <p className="text-center text-xs text-muted-foreground/70 py-4">
               Henüz üye eklenmemiş. İlk üyeyi eklemek için yukarıdaki butona tıklayın.
             </p>
           ) : (
             members.map((member) => (
               <div
                 key={member.id}
-                className="flex items-center justify-between rounded-md border border-border/70 bg-card px-3 py-2 text-xs sm:text-sm"
+                className="flex items-center justify-between rounded-lg border border-border/40 bg-card px-3 py-2 text-xs sm:text-sm transition-colors hover:border-border/70"
               >
-                <div className="flex items-center gap-3">
-                  <span>{member.name}</span>
+                <div className="flex items-center gap-2.5">
+                  <span className="text-foreground/85">{member.name}</span>
                   {member.totalDebt > 0 && (
-                    <span className="rounded-full bg-coffee/20 px-2 py-0.5 text-[11px] text-coffee">
+                    <span className="rounded-md bg-rose-50 dark:bg-rose-950/30 px-1.5 py-0.5 text-[10px] font-medium text-rose-700/70 dark:text-rose-300/70">
                       {member.totalDebt} borç
                     </span>
                   )}
@@ -138,10 +139,10 @@ export function MemberManagement() {
                       setEditMemberName(member.name);
                       setError(null);
                     }}
-                    className="rounded-sm p-1 text-muted-foreground hover:text-coffee transition-colors"
+                    className="rounded-sm p-1 text-muted-foreground/50 hover:text-foreground/70 transition-colors"
                     title="Üyeyi düzenle"
                   >
-                    <Pencil className="h-4 w-4" />
+                    <Pencil className="h-3.5 w-3.5" />
                   </button>
                 </div>
               </div>

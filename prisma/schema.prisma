@@ -16,6 +16,8 @@ model Group {
 
   members     Member[]
   debts       Debt[]
+  settings    Settings?
+  consumptions CoffeeConsumption[]
 
   @@map("groups")
 }
@@ -29,6 +31,7 @@ model Member {
 
   group       Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
   debts       Debt[]
+  consumptions CoffeeConsumption[]
 
   @@unique([groupId, name])
   @@map("members")
@@ -47,5 +50,30 @@ model Debt {
   group       Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
   @@map("debts")
+}
+
+model Settings {
+  id              String   @id @default(cuid())
+  groupId         String   @unique
+  coffeePriceTL   Int      @default(200)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  group           Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@map("settings")
+}
+
+model CoffeeConsumption {
+  id          String   @id @default(cuid())
+  memberId    String
+  groupId     String
+  round       Int      @default(1)
+  createdAt   DateTime @default(now())
+
+  member      Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  group       Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@map("coffee_consumptions")
 }
 

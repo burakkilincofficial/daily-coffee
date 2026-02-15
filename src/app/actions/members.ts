@@ -147,9 +147,33 @@ export async function getMembersAction() {
       where: { groupId: group.id },
       include: {
         debts: true,
+        consumptions: true,
       },
       orderBy: { createdAt: "asc" },
     });
+
+    // Round-robin hesaplama
+    const memberDrinkCounts = members.map((m) => ({
+      memberId: m.id,
+      drinkCount: m.consumptions.length,
+      coffeeDebt: m.debts
+        .filter((d) => d.type === "coffee")
+        .reduce((sum, d) => sum + d.amount, 0),
+    }));
+
+    const minDrinks =
+      memberDrinkCounts.length > 0
+        ? Math.min(...memberDrinkCounts.map((m) => m.drinkCount))
+        : 0;
+    const currentRound = minDrinks + 1;
+
+    const membersWhoCanDrink = memberDrinkCounts.filter(
+      (m) => m.drinkCount < currentRound
+    );
+    const zeroDebtWaiting = membersWhoCanDrink.filter(
+      (m) => m.coffeeDebt === 0
+    );
+    const hasZeroDebtWaiting = zeroDebtWaiting.length > 0;
 
     const membersWithDebts: MemberWithDebts[] = members.map((member) => {
       const coffeeDebt = member.debts
@@ -162,6 +186,18 @@ export async function getMembersAction() {
         .filter((d) => d.type === "meal")
         .reduce((sum, d) => sum + d.amount, 0);
       const totalDebt = coffeeDebt + teaDebt + mealDebt;
+
+      const coffeesDrunk = member.consumptions.length;
+      const hasNotDrunkThisRound = coffeesDrunk < currentRound;
+
+      let canDrinkCoffee: boolean;
+      if (!hasNotDrunkThisRound) {
+        canDrinkCoffee = false;
+      } else if (hasZeroDebtWaiting) {
+        canDrinkCoffee = coffeeDebt === 0;
+      } else {
+        canDrinkCoffee = true;
+      }
 
       return {
         id: member.id,
@@ -182,6 +218,8 @@ export async function getMembersAction() {
         coffeeDebt,
         teaDebt,
         mealDebt,
+        coffeesDrunk,
+        canDrinkCoffee,
       };
     });
 
